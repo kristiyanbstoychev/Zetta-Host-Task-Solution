@@ -19,3 +19,5 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+# .hprof files in case of crash and dumped heap into file
+*.hprof
