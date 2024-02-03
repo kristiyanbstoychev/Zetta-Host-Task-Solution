@@ -9,8 +9,8 @@ import static tests.GlobalVariables.driver;
 public class SearchTests extends BaseTest {
 
     @Test
-    void searchByText() {
+    void addOnlyNonDiscountedItemsToCustomerCart() {
         SearchLocators searchLocators = PageFactory.initElements(driver, SearchLocators.class);
-        searchLocators.addOnlyDiscountedProductsToCart();
+        searchLocators.addOnlyNonDiscountedProductsToCart();
     }
 }
