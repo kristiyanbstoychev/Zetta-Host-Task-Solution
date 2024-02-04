@@ -20,7 +20,7 @@ public class SearchLocators extends BasePage {
     @FindBy(id = "s-all-filters")
     private WebElement filterElementsMobile;
 
-    @FindBy(xpath = "//span[@data-component-type='s-search-results']")
+    @FindBy(css = "[data-component-type='s-search-results']")
     private WebElement searchResults;
 
     //span[@data-a-strike='true']
