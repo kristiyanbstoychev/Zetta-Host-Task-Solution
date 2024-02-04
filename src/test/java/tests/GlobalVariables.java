@@ -21,7 +21,7 @@ public class GlobalVariables {
 
     //default browser and device, used in cases where no environment variables are defined
     public static final String defaultBrowser = "chrome";
-    public static final String defaultDevice = "iPhone 6/7/8";
+    public static final String defaultDevice = "iPhone XR";
     //Samsung Galaxy S20 Ultra
     //Galaxy S9+
     //iPhone XR

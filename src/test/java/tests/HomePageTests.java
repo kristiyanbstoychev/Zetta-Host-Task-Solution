@@ -11,7 +11,7 @@ public class HomePageTests extends BaseTest {
 
     @Test
     void verifyHomePageContent() {
-        HomePage exampleLocatorsCFUI = PageFactory.initElements(driver, HomePage.class);
-        exampleLocatorsCFUI.verifyHomePageContent();
+        HomePage homePage = PageFactory.initElements(driver, HomePage.class);
+        homePage.verifyHomePageContent();
     }
 }

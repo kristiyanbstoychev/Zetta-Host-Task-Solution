@@ -13,18 +13,6 @@ import static tests.GlobalVariables.isMobile;
 public class HomePage extends BasePage {
 
     //Locators
-    @FindBy(id = "twotabsearchtextbox")
-    private WebElement searchInputFieldDesktop;
-
-    @FindBy(id = "nav-search-keywords")
-    private WebElement searchInputFieldMobile;
-
-    @FindBy(css = "[class='nav-search-submit nav-bluebeacon']")
-    private WebElement submitSearchButtonMobile;
-
-    @FindBy(id = "nav-search-submit-button")
-    private WebElement submitSearchButtonDesktop;
-
     @FindBy(id = "nav-progressive-greeting")
     private WebElement signInButtonNavigationMobile;
 

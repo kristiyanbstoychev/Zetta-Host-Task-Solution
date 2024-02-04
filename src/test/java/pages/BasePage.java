@@ -6,15 +6,15 @@ import org.openqa.selenium.support.FindBy;
 public class BasePage {
 
     //Locators
-    @FindBy(id = "captchacharacters")
-    private static WebElement captchaInputField;
+    @FindBy(id = "twotabsearchtextbox")
+    public WebElement searchInputFieldDesktop;
 
-    public static WebElement getCaptchaInputField() {
-        return captchaInputField;
-    }
+    @FindBy(id = "nav-search-keywords")
+    public WebElement searchInputFieldMobile;
 
-    //Tests
-    public void classSpecificMethod() {
-        //....
-    }
+    @FindBy(css = "[class='nav-search-submit nav-bluebeacon']")
+    public WebElement submitSearchButtonMobile;
+
+    @FindBy(id = "nav-search-submit-button")
+    public WebElement submitSearchButtonDesktop;
 }
