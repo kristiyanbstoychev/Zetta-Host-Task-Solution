@@ -20,7 +20,7 @@ public class GlobalVariables {
     public static WebDriver driver;
 
     //default browser and device, used in cases where no environment variables are defined
-    public static final String defaultBrowser = "mobile";
+    public static final String defaultBrowser = "chrome";
     public static final String defaultDevice = "iPhone XR";
     //Samsung Galaxy S20 Ultra
     //Galaxy S9+

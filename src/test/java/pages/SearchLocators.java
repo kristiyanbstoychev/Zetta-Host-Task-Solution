@@ -21,23 +21,35 @@ public class SearchLocators extends BasePage {
     private WebElement filterElementsMobile;
 
     @FindBy(xpath = "//span[@data-component-type='s-search-results']")
-    private WebElement searchResultsMobile;
+    private WebElement searchResults;
 
     //span[@data-a-strike='true']
     @FindBy(xpath = "//div[@data-csa-c-item-id]//span[@data-component-type='s-pinch-to-zoom']")
-    private List<WebElement> searchResultsItems;
+    private List<WebElement> searchResultsItemsMobile;
+
+    @FindBy(xpath = "//div[@data-csa-c-item-id]//span[@data-component-type='s-product-image']")
+    private List<WebElement> searchResultsItemsDesktop;
 
     @FindBy(xpath = "//span[@class='a-size-double-large a-color-price savingPriceOverride aok-align-center reinventPriceSavingsPercentageMargin savingsPercentage']")
-    private WebElement productPageProductDiscountPercentage;
+    private WebElement productPageProductDiscountPercentageMobile;
+
+    @FindBy(xpath = "//span[@class='a-size-large a-color-price savingPriceOverride aok-align-center reinventPriceSavingsPercentageMargin savingsPercentage']")
+    private WebElement productPageProductDiscountPercentageDesktop;
 
     @FindBy(id = "nav-cart-count")
     private WebElement numberOfItemsInCart;
 
     @FindBy(id = "add-to-cart-button")
-    private WebElement addToCartButton;
+    private WebElement addToCartButtonMobile;
+
+    @FindBy(id = "submit.add-to-cart")
+    private List<WebElement> addToCartButtonDesktop;
+
+    @FindBy(id = "productTitle")
+    private WebElement productNameLocatorDesktop;
 
     @FindBy(id = "title")
-    private WebElement productNameLocator;
+    private WebElement productNameLocatorMobile;
 
     @FindBy(xpath = "//div//img[@src='']")
     private WebElement productImageLocator;
@@ -46,12 +58,21 @@ public class SearchLocators extends BasePage {
     private WebElement productPriceLocator;
 
     @FindBy(xpath = "//a[contains(text(), 'Go to Cart')]")
-    private WebElement goToCartButton;
+    private List<WebElement> goToCartButton;
 
     @FindBy(xpath = "//span[contains(text(), 'Added to Cart')]")
     private WebElement addedToCartSuccessMessage;
     @FindBy(name = "proceedToRetailCheckout")
     private WebElement proceedToRetailCheckoutButton;
+
+    @FindBy(className = "a-truncate-cut")
+    private List<WebElement> checkOutProductName;
+
+    @FindBy(className = "a-price-whole")
+    private List<WebElement> checkOutProductPriceMobile;
+
+    @FindBy(className = "sc-badge-price-to-pay")
+    private WebElement checkOutProductPriceDesktop;
 
     public static String searchURL;
     public  String productName;
@@ -63,9 +84,14 @@ public class SearchLocators extends BasePage {
             searchInputFieldMobile.sendKeys(searchText);
             submitSearchButtonMobile.click();
 
-            getWait().until(ExpectedConditions.visibilityOf(searchResultsMobile));
-            searchURL = driver.getCurrentUrl();
         }
+        else {
+            searchInputFieldDesktop.sendKeys(searchText);
+            submitSearchButtonDesktop.click();
+
+        }
+        getWait().until(ExpectedConditions.visibilityOf(searchResults));
+        searchURL = driver.getCurrentUrl();
     }
 
     public void addOnlyNonDiscountedProductsToCart() {
@@ -75,9 +101,20 @@ public class SearchLocators extends BasePage {
     }
 
     public void addNonDiscountedElementToCart() {
+        List<WebElement> searchResults;
+        WebElement priceDiscountElement;
 
-        for (int i = 0; i < (searchResultsItems.size() - 1); i++) {
-            WebElement elementToUse = searchResultsItems.get(i);
+        if (isMobile) {
+            searchResults = searchResultsItemsMobile;
+            priceDiscountElement = productPageProductDiscountPercentageMobile;
+        }
+        else {
+            searchResults = searchResultsItemsDesktop;
+            priceDiscountElement = productPageProductDiscountPercentageDesktop;
+        }
+
+        for (int i = 0; i < (searchResults.size()- 1); i++) {
+            WebElement elementToUse = searchResults.get(i);
 
             getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@data-csa-c-item-id]")));
             getWait().until(ExpectedConditions.elementToBeClickable(elementToUse));
@@ -85,8 +122,7 @@ public class SearchLocators extends BasePage {
             elementToUse.click();
 
             try {
-                getWait().until(ExpectedConditions.visibilityOf(productPageProductDiscountPercentage));
-                getWait().until(ExpectedConditions.visibilityOf(addToCartButton));
+                getWait().until(ExpectedConditions.visibilityOf(priceDiscountElement));
                 System.out.println("product is at a discounted price");
                 driver.navigate().to(searchURL);
             }
@@ -101,10 +137,23 @@ public class SearchLocators extends BasePage {
     }
 
     public void addProductToCart() {
+        WebElement addToCartButton;
+        WebElement productNameLocator;
+
+        if (isMobile) {
+            addToCartButton = addToCartButtonMobile;
+            productNameLocator = productNameLocatorMobile;
+        }
+        else {
+            addToCartButton = addToCartButtonDesktop.getFirst();
+            productNameLocator = productNameLocatorDesktop;
+        }
+
         String initialCartItemsCount = numberOfItemsInCart.getText();
         String newCartItemsCount;
 
         productName = productNameLocator.getText();
+
         productPrice = productPriceLocator.getText();
         productImage = driver.findElement(By.xpath("//div//img[@alt='"+ productName +"']")).getAttribute("src");
 
@@ -119,14 +168,25 @@ public class SearchLocators extends BasePage {
     }
 
     public void verifyCartContent() {
-        getWait().until(ExpectedConditions.elementToBeClickable(goToCartButton));
-        goToCartButton.click();
+        WebElement navigateToCartButton;
+        WebElement productPriceLocator;
+
+        if (isMobile) {
+            navigateToCartButton = goToCartButton.getFirst();
+            productPriceLocator = checkOutProductPriceMobile.getLast();
+        }
+        else {
+            navigateToCartButton = goToCartButton.getLast();
+            productPriceLocator = checkOutProductPriceDesktop;
+        }
+
+        getWait().until(ExpectedConditions.elementToBeClickable(navigateToCartButton));
+        navigateToCartButton.click();
         getWait().until(ExpectedConditions.visibilityOf(proceedToRetailCheckoutButton));
 
-        String bodyText = driver.findElement(By.tagName("body")).getText();
+        getWait().until(ExpectedConditions.textToBePresentInElement(checkOutProductName.getFirst(), productName.substring(0, 50)));
 
-        Assertions.assertTrue(bodyText.contains(productName));
-        Assertions.assertTrue(bodyText.contains(productPrice));
+        getWait().until(ExpectedConditions.textToBePresentInElement(productPriceLocator, productPrice.substring(0, 4)));
         System.out.println("cart content verified");
     }
 
