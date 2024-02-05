@@ -6,12 +6,17 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TimeUtils;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static tests.BaseTest.getWait;
+import static tests.GlobalVariables.baseURL;
 import static tests.GlobalVariables.driver;
+import static utils.CSVHandler.saveListDataToTxtFile;
 
 public class SiteCrawlerLocators extends BasePage {
 
@@ -48,12 +53,11 @@ public class SiteCrawlerLocators extends BasePage {
     public int loopStart;
     public int loopEnd;
 
-    public  List<String> departmentURLs = new ArrayList<String>();
-    public  List<String> departmenURLNames = new ArrayList<String>();
-    public  List<String> departmenURLStatuses = new ArrayList<String>();
+    public  List<String> results = new ArrayList<String>();
 
+    public String responseStatus = null;
 
-    public void verifyLinks() {
+    public void verifyLinks() throws IOException {
         getWait().until(ExpectedConditions.elementToBeClickable(hamburgerMenuDesktop));
         hamburgerMenuDesktop.click();
 
@@ -67,39 +71,39 @@ public class SiteCrawlerLocators extends BasePage {
         closeHamburgerMenuButton.click();
 
         verifyDepartmentLinks();
-
     }
 
-    public void verifyDepartmentLinks() {
+    public void verifyDepartmentLinks() throws IOException {
         for (int i = loopStart; i < 6; i++) {
             getWait().until(ExpectedConditions.elementToBeClickable(hamburgerMenuDesktop));
-            TimeUtils.waitForSeconds(1);
             hamburgerMenuDesktop.click();
 
             getWait().until(ExpectedConditions.visibilityOf(signUpMessage));
 
+            if (showAllItemsButton.getFirst().isDisplayed()) {
+                getWait().until(ExpectedConditions.elementToBeClickable(showAllItemsButton.getFirst()));
+                showAllItemsButton.getFirst().click();
+            }
+
             getWait().until(ExpectedConditions.elementToBeClickable(shopByDepartmentLinks.get(i)));
+            TimeUtils.waitForSeconds(1);
+            System.out.println(shopByDepartmentLinks.get(i).getText());
             shopByDepartmentLinks.get(i).click();
             getWait().until(ExpectedConditions.visibilityOf(subMenuList));
-            for (WebElement departmentLink : departmentSubMenuItems) {
-                String url = departmentLink.getAttribute("href");
-                String urlName = departmentLink.getText();
-                departmentURLs.add(url);
-                departmenURLNames.add(urlName);
-                driver.navigate().to(url);
-                try {
-                    getWait().until(ExpectedConditions.visibilityOf(departmentPageResults));
-                    departmenURLStatuses.add("OK");
-                }
-                catch (Exception e) {
-                    departmenURLStatuses.add("NOT OK");
-                }
-                driver.navigate().back();
+            //(departmentSubMenuItems.size() - 1)
+            for (int j = 0; j < 2; j++) {
+                getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//ul[@class='hmenu hmenu-visible hmenu-translateX']//li//a[@class='hmenu-item']")));
+                TimeUtils.waitForSeconds(1);
+                String url = departmentSubMenuItems.get(j).getAttribute("href");
+                String urlName = departmentSubMenuItems.get(j).getText();
+                results.add(urlName);
+                results.add(url);
+                veriftLinkStatusCode(url);
+                results.add(responseStatus);
             }
+            driver.navigate().to(baseURL);
         }
-        System.out.println(departmenURLNames);
-        System.out.println(departmentURLs);
-        System.out.println(departmenURLStatuses);
+        saveListDataToTxtFile(results);
     }
     public int getLoopStartingIndex() {
         int initialId = 0;
@@ -128,4 +132,20 @@ public class SiteCrawlerLocators extends BasePage {
         }
         return initialId;
     }
+
+    public void veriftLinkStatusCode(String url) throws IOException {
+        URL obj = new URL(url);
+        HttpURLConnection httpURLConnection = (HttpURLConnection) obj.openConnection();
+        httpURLConnection.setRequestMethod("GET");
+        httpURLConnection.setRequestProperty("User-Agent", "Chrome/121.0.0.0");
+        int responseCode = httpURLConnection.getResponseCode();
+
+        if (responseCode == 200) {
+            responseStatus = "OK";
+        }
+        else {
+            responseStatus = "Dead Link";
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package tests;
 import org.openqa.selenium.WebDriver;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class GlobalVariables {
     //the directory, where screenshots of failed tests are stored
     public final static String localTempDirectoryWindows = System.getProperty("java.io.tmpdir") + "01_failedTestsScreenshots\\";
     public final static String localTempDirectoryLinux = System.getProperty("java.io.tmpdir") + "/01_failedTestsScreenshots/";
+
+    public final static String currentWorkingDirectory = Path.of("").toAbsolutePath().toString();
 
     public static WebDriver driver;
 

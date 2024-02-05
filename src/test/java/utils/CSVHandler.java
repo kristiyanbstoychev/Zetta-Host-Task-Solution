@@ -1,11 +1,12 @@
 package utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static tests.GlobalVariables.currentWorkingDirectory;
 
 public class CSVHandler {
 
@@ -27,6 +28,17 @@ public class CSVHandler {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+    }
+
+    public static void saveListDataToTxtFile(List<String> listToUse) throws IOException {
+//        FileWriter writer = new FileWriter(currentWorkingDirectory  + System.currentTimeMillis() + "_results" + ".txt");
+        FileWriter writer = new FileWriter(new File(currentWorkingDirectory + "/siteCrawlerResults/", System.currentTimeMillis() + "_results" + ".txt"));
+
+        String collect = String.join(",", listToUse);
+        System.out.println(collect);
+
+        writer.write(collect);
+        writer.close();
     }
 
 }

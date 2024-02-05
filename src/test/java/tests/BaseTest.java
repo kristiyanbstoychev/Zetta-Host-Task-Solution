@@ -60,11 +60,12 @@ public class BaseTest {
 
         try {
             getWait().until(ExpectedConditions.titleIs("Amazon.com. Spend less. Smile more."));
+            getWait().until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector("[data-csa-c-slot-id='HamburgerMenuDesktop']"))));
         }
         catch (Exception e) {
-            getWait().until(ExpectedConditions.visibilityOf(driver.findElement(By.id("captchacharacters"))));
             driver.navigate().refresh();
             getWait().until(ExpectedConditions.titleIs("Amazon.com. Spend less. Smile more."));
+            getWait().until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector("[data-csa-c-slot-id='HamburgerMenuDesktop']"))));
         }
     }
 
