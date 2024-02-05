@@ -74,7 +74,7 @@ public class SiteCrawlerLocators extends BasePage {
     }
 
     public void verifyDepartmentLinks() throws IOException {
-        for (int i = loopStart; i < 6; i++) {
+        for (int i = loopStart; i < loopEnd; i++) {
             getWait().until(ExpectedConditions.elementToBeClickable(hamburgerMenuDesktop));
             hamburgerMenuDesktop.click();
 
@@ -90,8 +90,8 @@ public class SiteCrawlerLocators extends BasePage {
             System.out.println(shopByDepartmentLinks.get(i).getText());
             shopByDepartmentLinks.get(i).click();
             getWait().until(ExpectedConditions.visibilityOf(subMenuList));
-            //(departmentSubMenuItems.size() - 1)
-            for (int j = 0; j < 2; j++) {
+
+            for (int j = 0; j < (departmentSubMenuItems.size() - 1); j++) {
                 getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//ul[@class='hmenu hmenu-visible hmenu-translateX']//li//a[@class='hmenu-item']")));
                 TimeUtils.waitForSeconds(1);
                 String url = departmentSubMenuItems.get(j).getAttribute("href");
