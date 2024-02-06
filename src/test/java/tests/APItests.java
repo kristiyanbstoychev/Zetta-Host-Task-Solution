@@ -1,10 +1,15 @@
 package tests;
 
+import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import io.restassured.RestAssured;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static io.restassured.RestAssured.given;
 
 
 public class APItests {
@@ -14,13 +19,49 @@ public class APItests {
         countNumberOfPostsForUsers();
     }
 
+    @Test
+    public void verifyThatThereAreNoDuplicatePostIds() {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("https://jsonplaceholder.typicode.com/posts")
+                .then()
+                .extract().response();
+
+        Assertions.assertEquals(200, response.statusCode());
+
+        JsonPath jsonPath = new JsonPath(response.asString());
+        List<Integer> postIds = jsonPath.getList("id");
+        System.out.println(checkForDuplicateIds(postIds));
+
+    }
+    private <T> Set<T> checkForDuplicateIds(Collection<T> collection) {
+        Set<T> duplicates = new LinkedHashSet<>();
+        Set<T> uniques = new HashSet<>();
+
+        for(T t : collection) {
+            if(!uniques.add(t)) {
+                duplicates.add(t);
+                System.out.println("Duplicate id found: " + t);
+            }
+        }
+        if (duplicates.isEmpty()) {
+            System.out.println("No duplicate ids found");
+        }
+        return duplicates;
+    }
+
+
+
     public void countNumberOfPostsForUsers() {
         List postsResponse = RestAssured.get("https://jsonplaceholder.typicode.com/posts").as(List.class);
+
         int numberOfPosts = 0;
         int userNumber = 1;
-        String numberOfPostsPerUser = null;
+        String numberOfPostsPerUser;
         List<String> results = new ArrayList<>();
 
+//Iterates through the response and counts the number of posts for each userId
         for (int i = 1; i <= 10; i++) {
             for (Object postObject : postsResponse) {
                 if (postObject.toString().contains("userId=" + i)) {
@@ -34,4 +75,5 @@ public class APItests {
         }
         System.out.println(results);
     }
+
 }
