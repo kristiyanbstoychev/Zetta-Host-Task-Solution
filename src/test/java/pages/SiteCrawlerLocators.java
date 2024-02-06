@@ -57,7 +57,7 @@ public class SiteCrawlerLocators extends BasePage {
 
     public String responseStatus = null;
 
-    public void verifyLinks() throws IOException {
+    public void exctractAndVerifyUrlStatuses() throws IOException {
         getWait().until(ExpectedConditions.elementToBeClickable(hamburgerMenuDesktop));
         hamburgerMenuDesktop.click();
 
