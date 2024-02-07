@@ -14,6 +14,8 @@ import static tests.GlobalVariables.driver;
 import static tests.GlobalVariables.isMobile;
 
 public class SearchLocators extends BasePage {
+
+    //Locators for the SearchTests
     @FindBy(id = "s-refinements")
     private WebElement filterElementsDesktop;
 
@@ -74,11 +76,13 @@ public class SearchLocators extends BasePage {
     @FindBy(className = "sc-badge-price-to-pay")
     private WebElement checkOutProductPriceDesktop;
 
+    //Variables used for the test methods
     public static String searchURL;
     public  String productName;
     public String productPrice;
     public static String productImage;
 
+    //Triggers a global search by given text
     public void globalSearchByText(String searchText) {
         if (isMobile) {
             searchInputFieldMobile.sendKeys(searchText);
@@ -100,10 +104,12 @@ public class SearchLocators extends BasePage {
         addNonDiscountedElementToCart();
     }
 
+    //loops through all the search results and adds only the non-discounted ones to cart
     public void addNonDiscountedElementToCart() {
         List<WebElement> searchResults;
         WebElement priceDiscountElement;
 
+        //check whether the viewport is for mobile or desktop device
         if (isMobile) {
             searchResults = searchResultsItemsMobile;
             priceDiscountElement = productPageProductDiscountPercentageMobile;
@@ -136,6 +142,7 @@ public class SearchLocators extends BasePage {
         }
     }
 
+    //adds non-discounted products to customer cart
     public void addProductToCart() {
         WebElement addToCartButton;
         WebElement productNameLocator;
@@ -167,6 +174,7 @@ public class SearchLocators extends BasePage {
         getWait().until(ExpectedConditions.textToBePresentInElement(numberOfItemsInCart, newCartItemsCount));
     }
 
+    //verifying that the cart contains the proper products
     public void verifyCartContent() {
         WebElement navigateToCartButton;
         WebElement productPriceLocator;

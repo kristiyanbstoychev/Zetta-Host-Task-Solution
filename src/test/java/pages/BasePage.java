@@ -5,7 +5,7 @@ import org.openqa.selenium.support.FindBy;
 
 public class BasePage {
 
-    //Locators
+    //Common locators for all tests
     @FindBy(id = "twotabsearchtextbox")
     public WebElement searchInputFieldDesktop;
 
