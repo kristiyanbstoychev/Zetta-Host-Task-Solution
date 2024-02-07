@@ -14,6 +14,6 @@ public class SiteCrawlerTest extends BaseTest {
     @Test
     void verifyShopByDepartmentLinks() throws IOException {
         SiteCrawlerLocators siteCrawlerLocators = PageFactory.initElements(driver, SiteCrawlerLocators.class);
-        siteCrawlerLocators.exctractAndVerifyUrlStatuses();
+        siteCrawlerLocators.extractAndVerifyUrlStatuses();
     }
 }

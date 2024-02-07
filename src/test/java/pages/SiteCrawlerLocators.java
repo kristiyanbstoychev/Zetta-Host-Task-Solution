@@ -14,13 +14,12 @@ import java.util.List;
 import java.util.Objects;
 
 import static tests.BaseTest.getWait;
-import static tests.GlobalVariables.baseURL;
-import static tests.GlobalVariables.driver;
-import static utils.CSVHandler.saveListDataToTxtFile;
+import static tests.GlobalVariables.*;
+import static utils.FileHandler.saveListDataToTxtFile;
 
 public class SiteCrawlerLocators extends BasePage {
 
-    //5 to 26
+    //Locators needed for the SiteCrawler test methods
     @FindBy(css = "[data-menu-id]")
     private List<WebElement> shopByDepartmentLinks;
 
@@ -53,11 +52,13 @@ public class SiteCrawlerLocators extends BasePage {
     public int loopStart;
     public int loopEnd;
 
+    //A list containing the results extracted from the crawl
     public  List<String> results = new ArrayList<String>();
 
     public String responseStatus = null;
 
-    public void exctractAndVerifyUrlStatuses() throws IOException {
+    //extracts all URLs from the Shop By Departments dropdown and verifies is they are dead or not
+    public void extractAndVerifyUrlStatuses() throws IOException {
         getWait().until(ExpectedConditions.elementToBeClickable(hamburgerMenuDesktop));
         hamburgerMenuDesktop.click();
 
@@ -73,6 +74,7 @@ public class SiteCrawlerLocators extends BasePage {
         verifyDepartmentLinks();
     }
 
+    //loop through all department links and their sub elements from the dropdown menu, saves their title, url and status (dead or ok) to a file
     public void verifyDepartmentLinks() throws IOException {
         for (int i = loopStart; i < loopEnd; i++) {
             getWait().until(ExpectedConditions.elementToBeClickable(hamburgerMenuDesktop));
@@ -98,13 +100,15 @@ public class SiteCrawlerLocators extends BasePage {
                 String urlName = departmentSubMenuItems.get(j).getText();
                 results.add(urlName);
                 results.add(url);
-                veriftLinkStatusCode(url);
+                verifyUrlStatusCode(url);
                 results.add(responseStatus);
             }
             driver.navigate().to(baseURL);
         }
-        saveListDataToTxtFile(results);
+        saveListDataToTxtFile(results, currentWorkingDirectory + "/siteCrawlerResults/");
     }
+
+    //determines where should the loop start, in our case from the Shop by Department element
     public int getLoopStartingIndex() {
         int initialId = 0;
         getWait().until(ExpectedConditions.numberOfElementsToBeMoreThan(By.xpath("//ul[@class='hmenu hmenu-visible']//li"), 1));
@@ -118,6 +122,7 @@ public class SiteCrawlerLocators extends BasePage {
         return initialId;
     }
 
+    //determines where should the loop stop, in our case when it reaches the See less button
     public int getLoopEndIndex() {
         int initialId = 0;
         getWait().until(ExpectedConditions.numberOfElementsToBeMoreThan(By.xpath("//ul[@class='hmenu hmenu-visible']//li"), 1));
@@ -133,7 +138,8 @@ public class SiteCrawlerLocators extends BasePage {
         return initialId;
     }
 
-    public void veriftLinkStatusCode(String url) throws IOException {
+    //verifies the URL status code and changes the value of responseStatus to OK or Dead Link
+    public void verifyUrlStatusCode(String url) throws IOException {
         URL obj = new URL(url);
         HttpURLConnection httpURLConnection = (HttpURLConnection) obj.openConnection();
         httpURLConnection.setRequestMethod("GET");

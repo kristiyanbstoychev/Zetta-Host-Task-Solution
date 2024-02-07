@@ -19,6 +19,7 @@ public class APItests {
         countNumberOfPostsForUsers();
     }
 
+    //obtains all post ids and checks for duplicate values
     @Test
     public void verifyThatThereAreNoDuplicatePostIds() {
         Response response = given()
@@ -35,6 +36,8 @@ public class APItests {
         System.out.println(checkForDuplicateIds(postIds));
 
     }
+
+    //saves duplicate values to a list and outputs them if there are any
     private <T> Set<T> checkForDuplicateIds(Collection<T> collection) {
         Set<T> duplicates = new LinkedHashSet<>();
         Set<T> uniques = new HashSet<>();
@@ -51,8 +54,7 @@ public class APItests {
         return duplicates;
     }
 
-
-
+    //outputs the number of posts per user, based on the userId
     public void countNumberOfPostsForUsers() {
         List postsResponse = RestAssured.get("https://jsonplaceholder.typicode.com/posts").as(List.class);
 

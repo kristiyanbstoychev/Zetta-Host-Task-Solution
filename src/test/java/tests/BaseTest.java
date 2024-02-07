@@ -17,19 +17,14 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.BasePage;
-import pages.HomePage;
 import utils.TimeUtils;
 
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import utils.CSVHandler;
-
 import static tests.GlobalVariables.browserForTestingEnvVariableName;
 import static tests.GlobalVariables.baseURL;
-import static tests.GlobalVariables.csvEmailsList;
-import static tests.GlobalVariables.csvNicknamesList;
 import static tests.GlobalVariables.defaultBrowser;
 import static tests.GlobalVariables.defaultDevice;
 import static tests.GlobalVariables.deviceForTestingEnvVariableName;
@@ -47,7 +42,6 @@ public class BaseTest {
     //Executed before each test
     @BeforeEach
     public void doBeforeEachTest() {
-        BasePage basePage = PageFactory.initElements(driver, BasePage.class);
         pickBrowser(getEnvVariable(browserForTestingEnvVariableName, defaultBrowser));
 
         if (getEnvVariable(browserForTestingEnvVariableName, defaultBrowser).equals("mobile")) {

@@ -11,13 +11,6 @@ public class GlobalVariables {
     //variables storing the urls for testing
     public final static String baseURL = "https://www.amazon.com/";
 
-    //variable storing the currently used operating system
-    public static String operationSystem = System.getProperty("os.name");
-
-    //the directory, where screenshots of failed tests are stored
-    public final static String localTempDirectoryWindows = System.getProperty("java.io.tmpdir") + "01_failedTestsScreenshots\\";
-    public final static String localTempDirectoryLinux = System.getProperty("java.io.tmpdir") + "/01_failedTestsScreenshots/";
-
     public final static String currentWorkingDirectory = Path.of("").toAbsolutePath().toString();
 
     public static WebDriver driver;
@@ -50,9 +43,4 @@ public class GlobalVariables {
     //boolean which checks whether tests are executed in debug mode or not
     public static final boolean isDebugModeEnabled = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
 
-    //lists with emails and nicknames that could be used for testing, stored in csv files
-    public static List<String> csvEmailsList = new ArrayList<>();
-    public static List<String> csvNicknamesList = new ArrayList<>();
-
-    public static String exampleGlobalVariable = "";
 }

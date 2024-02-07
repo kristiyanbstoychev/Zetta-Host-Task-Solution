@@ -12,7 +12,7 @@ import static tests.GlobalVariables.isMobile;
 
 public class HomePage extends BasePage {
 
-    //Locators
+    //Locators for the home page
     @FindBy(id = "nav-progressive-greeting")
     private WebElement signInButtonNavigationMobile;
 
@@ -53,6 +53,7 @@ public class HomePage extends BasePage {
     private WebElement footerDesktop;
 
     //Test methods
+    //Verifies that some of the elements on the home page are visible(clickable)
     public void verifyHomePageContent() {
         if (isMobile) {
             getWait().until(ExpectedConditions.elementToBeClickable(searchInputFieldMobile));
